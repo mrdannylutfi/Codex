@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export SVG Example</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding-top: 50px;
+        }
+        #canvas-container {
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Container where JavaScript will inject the SVG -->
+    <div id="canvas-container"></div>
+    
+    <!-- Button to trigger the download -->
+    <button id="export-btn">Export as .svg</button>
+
+    <script>
+        // Define SVG namespace
+        const svgNS = "http://w3.org";
+
+        // 1. Create the parent SVG element
+        const svgElement = document.createElementNS(svgNS, "svg");
+        svgElement.setAttribute("width", "300");
+        svgElement.setAttribute("height", "200");
+        svgElement.setAttribute("viewBox", "0 0 300 200");
+
+        // 2. Create the rectangle with 80% opacity
+        const rect = document.createElementNS(svgNS, "rect");
+        rect.setAttribute("x", "50");
+        rect.setAttribute("y", "25");
+        rect.setAttribute("width", "200");
+        rect.setAttribute("height", "150");
+        rect.setAttribute("fill", "#3498db");
+        rect.setAttribute("opacity", "0.8"); // 80% opacity
+        rect.setAttribute("rx", "10"); // Optional rounded corners
+
+        // 3. Create the text "A" centered inside the rectangle
+        const text = document.createElementNS(svgNS, "text");
+        text.setAttribute("x", "150"); // Center X (50 + 200/2)
+        text.setAttribute("y", "115"); // Center Y roughly with baseline adjustment
+        text.setAttribute("fill", "#ffffff");
+        text.setAttribute("font-size", "70");
+        text.setAttribute("font-weight", "bold");
+        text.setAttribute("text-anchor", "middle"); // Center text horizontally
+        text.textContent = "A";
+
+        // Append shapes to the SVG root
+        svgElement.appendChild(rect);
+        svgElement.appendChild(text);
+
+        // Inject the completed SVG into the HTML container
+        document.getElementById("canvas-container").appendChild(svgElement);
+
+        // 4. Export Functionality
+        document.getElementById("export-btn").addEventListener("click", () => {
+            // Serialize the SVG element into a string XML structure
+            const serializer = new XMLSerializer();
+            let source = serializer.serializeToString(svgElement);
+
+            // Add standard XML namespaces if they are missing
+            if (!source.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)) {
+                source = source.replace(/^<svg/, '<svg xmlns="http://w3.org"');
+            }
+            if (!source.match(/^<svg[^>]+xmlns:xlink="http:\/\/www\.w3\.org\/1999\/xlink"/)) {
+                source = source.replace(/^<svg/, '<svg xmlns:xlink="http://w3.org"');
+            }
+
+            // Add XML declaration
+            source = '<?xml version="1.0" encoding="utf-8"?>\n' + source;
+
+            // Convert string to a Blob data URL
+            const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+
+            // Create a temporary link element to trigger the download automatically
+            const downloadLink = document.createElement("a");
+            downloadLink.href = url;
+            downloadLink.download = "rectangle-A.svg";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        });
+    </script>
+
+</body>
+</html>
