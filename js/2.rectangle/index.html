@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refactored Interactive SVG App</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding-top: 50px;
+            background-color: #f0f2f5;
+        }
+        #canvas-container {
+            border: 1px solid #ccc;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #27ae60;
+        }
+        
+        /* Local UI Preview Styles Mirroring the Export Style Configuration */
+        .interactive-group {
+            cursor: pointer;
+            transform-origin: 150px 100px;
+            transition: opacity 0.2s ease;
+        }
+        @keyframes pulseGroup {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        .interactive-group:hover {
+            animation: pulseGroup 0.5s ease-in-out forwards;
+        }
+        .interactive-group:active {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container"></div>
+    <button id="export-btn">Export as .svg</button>
+
+    <!-- Load the refactored JS module architecture logic -->
+    <script src="app.js"></script>
+</body>
+</html>
